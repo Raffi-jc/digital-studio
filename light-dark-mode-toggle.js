@@ -8,7 +8,7 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-	console.log("howdy pardner");
+  console.log("howdy pardner");
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -231,4 +231,11 @@ function colorModeToggle() {
   });
 }
 
-colorModeToggle();
+// Disable script for devices with a screen width less than 768px (typically mobile)
+function isMobile() {
+  return window.innerWidth < 768;
+}
+
+if (!isMobile()) {
+  colorModeToggle();
+}
