@@ -106,12 +106,10 @@ function colorModeToggle() {
   function goDark(dark, animate) {
     animateHeroElements(dark);
     if (dark) {
-      localStorage.setItem("dark-mode", "true");
       htmlElement.classList.add("dark-mode");
       setColors(darkColors, animate);
       togglePressed = "true";
     } else {
-      localStorage.setItem("dark-mode", "false");
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
       togglePressed = "false";
@@ -138,17 +136,14 @@ function colorModeToggle() {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
 
-    let storagePreference = localStorage.getItem("dark-mode");
-    if (storagePreference !== null) {
-      if (storagePreference === "true") {
-        goDark(true, false);
-        simulateHover(darkButton);
-      } else {
-        goDark(false, false);
-        simulateHover(lightButton);
-      }
+    let darkModeFromPreference = colorPreference.matches;
+
+    // Set dark or light mode based on user's system preference
+    goDark(darkModeFromPreference, false);
+    if (darkModeFromPreference) {
+      simulateHover(darkButton);
     } else {
-      goDark(colorPreference.matches, false);
+      simulateHover(lightButton);
     }
 
     if (lightButton) {
