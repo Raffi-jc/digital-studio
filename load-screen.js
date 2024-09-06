@@ -17,6 +17,7 @@ if (sessionStorage.getItem("visited") !== null) {
 sessionStorage.setItem("visited", "true");
 
 function updateLoaderText() {
+  console.log("pardner loading");
   let progress = Math.round(counter.value);
   if (progress < 100) {
     $(".text-loader").text(progress);
