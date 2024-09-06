@@ -4,6 +4,9 @@ let counter = {
 
 let loadDuration = 5;
 
+// Check if dark mode is enabled
+const isDarkMode = document.documentElement.classList.contains("dark-mode");
+
 if (sessionStorage.getItem("visited") !== null) {
   loadDuration = 2;
   counter = {
@@ -55,3 +58,14 @@ tl.to(
   },
   0,
 );
+
+// Apply blending mode to .loading_animation depending on mode
+if (isDarkMode) {
+  gsap.set("._loading_animation", {
+    css: { mixBlendMode: "darken" },
+  });
+} else {
+  gsap.set("._loading_animation", {
+    css: { mixBlendMode: "screen" }, // Default blending mode is 'screen'
+  });
+}
