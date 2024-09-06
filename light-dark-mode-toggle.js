@@ -8,7 +8,7 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-  console.log("howdy pardner");
+	console.log("howdy pardner!");
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`);
-    let darkValue = computed.getPropertyValue(`--dark--${item}`);
+    let lightValue = computed.getPropertyValue(--color--${item});
+    let darkValue = computed.getPropertyValue(--dark--${item});
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[`--color--${item}`] = lightValue;
-      darkColors[`--color--${item}`] = darkValue;
+      lightColors[--color--${item}] = lightValue;
+      darkColors[--color--${item}] = darkValue;
     }
   });
 
@@ -106,16 +106,26 @@ function colorModeToggle() {
   function goDark(dark, animate) {
     animateHeroElements(dark);
     if (dark) {
+      localStorage.setItem("dark-mode", "true");
       htmlElement.classList.add("dark-mode");
       setColors(darkColors, animate);
       togglePressed = "true";
     } else {
+      localStorage.setItem("dark-mode", "false");
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
       togglePressed = "false";
     }
     window.dispatchEvent(new Event('colorModeToggle'));
   }
+
+  // Debounced function for handling media query changes
+  const debouncedCheckPreference = debounce((e) => {
+    goDark(e.matches, false);
+  }, 300);
+
+  const colorPreference = window.matchMedia("(prefers-color-scheme: dark)");
+  colorPreference.addEventListener("change", debouncedCheckPreference);
 
   function simulateHover(button) {
     if (button) {
@@ -128,8 +138,18 @@ function colorModeToggle() {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
 
-    // Set default mode (light or dark) manually
-    goDark(false, false);
+    let storagePreference = localStorage.getItem("dark-mode");
+    if (storagePreference !== null) {
+      if (storagePreference === "true") {
+        goDark(true, false);
+        simulateHover(darkButton);
+      } else {
+        goDark(false, false);
+        simulateHover(lightButton);
+      }
+    } else {
+      goDark(colorPreference.matches, false);
+    }
 
     if (lightButton) {
       lightButton.addEventListener("click", () => {
@@ -211,11 +231,4 @@ function colorModeToggle() {
   });
 }
 
-// Disable script for devices with a screen width less than 768px (typically mobile)
-function isMobile() {
-  return window.innerWidth < 768;
-}
-
-if (!isMobile()) {
-  colorModeToggle();
-}
+colorModeToggle();
