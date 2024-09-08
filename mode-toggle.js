@@ -8,7 +8,7 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-  console.log("howdy pardner :D");
+  console.log("howdy pardner");
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -46,7 +46,7 @@ function colorModeToggle() {
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
       lightColors[`--color--${item}`] = lightValue;
-      darkColors[`--dark--${item}`] = darkValue;
+      darkColors[`--color--${item}`] = darkValue;
     }
   });
 
@@ -116,7 +116,7 @@ function colorModeToggle() {
       setColors(lightColors, animate);
       togglePressed = "false";
     }
-    window.dispatchEvent(new Event("colorModeToggle"));
+    window.dispatchEvent(new Event('colorModeToggle'));
   }
 
   function simulateHover(button) {
@@ -139,9 +139,6 @@ function colorModeToggle() {
         goDark(false, false);
         simulateHover(lightButton);
       }
-    } else {
-      // Default to light mode if no preference is stored
-      goDark(false, false);
     }
 
     if (lightButton) {
@@ -224,5 +221,4 @@ function colorModeToggle() {
   });
 }
 
-// Call the function for all devices (mobile included)
 colorModeToggle();
