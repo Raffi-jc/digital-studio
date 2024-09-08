@@ -33,20 +33,26 @@ function colorModeToggle() {
   let colorModeEase = attr("power1.out", scriptTag.getAttribute("ease"));
 
   const cssVariables = scriptTag.getAttribute("tr-color-vars");
-  if (!cssVariables.length) {
+  if (!cssVariables) {
     console.warn("Value of tr-color-vars attribute not found");
     return;
   }
 
   let lightColors = {};
   let darkColors = {};
+
+  // Split the cssVariables string and trim each item to avoid unwanted spaces
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`).trim();
-    let darkValue = computed.getPropertyValue(`--dark--${item}`).trim();
+    let trimmedItem = item.trim(); // Ensure no extra spaces around the variable name
+
+    // Retrieve the light and dark values from CSS variables
+    let lightValue = computed.getPropertyValue(`--color--${trimmedItem}`).trim();
+    let darkValue = computed.getPropertyValue(`--dark--${trimmedItem}`).trim();
+
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[`--color--${item}`] = lightValue;
-      darkColors[`--color--${item}`] = darkValue;
+      lightColors[`--color--${trimmedItem}`] = lightValue;
+      darkColors[`--color--${trimmedItem}`] = darkValue;
     }
   });
 
