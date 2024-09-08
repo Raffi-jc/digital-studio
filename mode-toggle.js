@@ -8,7 +8,7 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-	console.log("howdy pardner :)");
+  console.log("howdy pardner");
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(--color--${item});
-    let darkValue = computed.getPropertyValue(--dark--${item});
+    let lightValue = computed.getPropertyValue(`--color--${item}`);
+    let darkValue = computed.getPropertyValue(`--dark--${item}`);
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[--color--${item}] = lightValue;
-      darkColors[--color--${item}] = darkValue;
+      lightColors[`--color--${item}`] = lightValue;
+      darkColors[`--dark--${item}`] = darkValue;
     }
   });
 
@@ -116,16 +116,8 @@ function colorModeToggle() {
       setColors(lightColors, animate);
       togglePressed = "false";
     }
-    window.dispatchEvent(new Event('colorModeToggle'));
+    window.dispatchEvent(new Event("colorModeToggle"));
   }
-
-  // Debounced function for handling media query changes
-  const debouncedCheckPreference = debounce((e) => {
-    goDark(e.matches, false);
-  }, 300);
-
-  const colorPreference = window.matchMedia("(prefers-color-scheme: dark)");
-  colorPreference.addEventListener("change", debouncedCheckPreference);
 
   function simulateHover(button) {
     if (button) {
@@ -148,7 +140,8 @@ function colorModeToggle() {
         simulateHover(lightButton);
       }
     } else {
-      goDark(colorPreference.matches, false);
+      // Default to light mode if no preference is stored
+      goDark(false, false);
     }
 
     if (lightButton) {
@@ -231,4 +224,5 @@ function colorModeToggle() {
   });
 }
 
+// Call the function for all devices (mobile included)
 colorModeToggle();
