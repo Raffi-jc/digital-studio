@@ -1,6 +1,14 @@
-function colorModeToggle() {
-  console.log("Color mode toggle initialized");
+// Debounce function
+function debounce(func, wait) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
 
+function colorModeToggle() {
+	console.log("howdy pardner!!");
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -13,6 +21,7 @@ function colorModeToggle() {
 
   const htmlElement = document.documentElement;
   const computed = getComputedStyle(htmlElement);
+  let togglePressed = "false";
 
   const scriptTag = document.querySelector("[tr-color-vars]");
   if (!scriptTag) {
@@ -24,31 +33,20 @@ function colorModeToggle() {
   let colorModeEase = attr("power1.out", scriptTag.getAttribute("ease"));
 
   const cssVariables = scriptTag.getAttribute("tr-color-vars");
-  if (!cssVariables) {
+  if (!cssVariables.length) {
     console.warn("Value of tr-color-vars attribute not found");
     return;
   }
 
   let lightColors = {};
   let darkColors = {};
-
-  // Split and process each CSS variable
   cssVariables.split(",").forEach(function (item) {
-    let trimmedItem = item.trim();
-    let lightValue = computed.getPropertyValue(`--color--${trimmedItem}`).trim();
-    let darkValue = computed.getPropertyValue(`--dark--${trimmedItem}`).trim();
-
-    // Debugging logs to see the fetched values
-    console.log(`Processing variable: ${trimmedItem}`);
-    console.log(`Light value: ${lightValue}`);
-    console.log(`Dark value: ${darkValue}`);
-
+    let lightValue = computed.getPropertyValue(--color--${item});
+    let darkValue = computed.getPropertyValue(--dark--${item});
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[`--color--${trimmedItem}`] = lightValue;
-      darkColors[`--color--${trimmedItem}`] = darkValue;
-    } else {
-      console.warn(`Light value for --color--${trimmedItem} not found!`);
+      lightColors[--color--${item}] = lightValue;
+      darkColors[--color--${item}] = darkValue;
     }
   });
 
@@ -58,8 +56,6 @@ function colorModeToggle() {
   }
 
   function setColors(colorObject, animate) {
-    console.log("Setting colors:", colorObject); // Logging colors for debugging
-
     if (typeof gsap !== "undefined" && animate) {
       gsap.to(htmlElement, {
         ...colorObject,
@@ -89,14 +85,17 @@ function colorModeToggle() {
         ease: colorModeEase,
         onComplete: () => {
           if (dark) {
-            document.querySelector(".intro_background_dark").style.display = "block";
+            document.querySelector(".intro_background_dark").style.display =
+              "block";
           } else {
-            document.querySelector(".intro_background_dark").style.display = "none";
+            document.querySelector(".intro_background_dark").style.display =
+              "none";
           }
         },
       }
     );
 
+    // Handle .is-glow elements
     gsap.to(".is-glow", {
       opacity: dark ? 1 : 0,
       duration: colorModeDuration,
@@ -105,43 +104,129 @@ function colorModeToggle() {
   }
 
   function goDark(dark, animate) {
-    console.log(dark ? "Switching to dark mode" : "Switching to light mode");
-
     animateHeroElements(dark);
-
     if (dark) {
       localStorage.setItem("dark-mode", "true");
       htmlElement.classList.add("dark-mode");
       setColors(darkColors, animate);
+      togglePressed = "true";
     } else {
       localStorage.setItem("dark-mode", "false");
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
+      togglePressed = "false";
     }
-
-    window.dispatchEvent(new Event("colorModeToggle"));
+    window.dispatchEvent(new Event('colorModeToggle'));
   }
 
-  window.addEventListener("DOMContentLoaded", () => {
+  // Debounced function for handling media query changes
+  const debouncedCheckPreference = debounce((e) => {
+    goDark(e.matches, false);
+  }, 300);
+
+  const colorPreference = window.matchMedia("(prefers-color-scheme: dark)");
+  colorPreference.addEventListener("change", debouncedCheckPreference);
+
+  function simulateHover(button) {
+    if (button) {
+      const mouseEnterEvent = new Event("mouseenter");
+      button.dispatchEvent(mouseEnterEvent);
+    }
+  }
+
+  window.addEventListener("DOMContentLoaded", (event) => {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
-      goDark(storagePreference === "true", false);
+      if (storagePreference === "true") {
+        goDark(true, false);
+        simulateHover(darkButton);
+      } else {
+        goDark(false, false);
+        simulateHover(lightButton);
+      }
     } else {
-      goDark(false, false); // Default to light mode
+      goDark(colorPreference.matches, false);
     }
 
     if (lightButton) {
-      lightButton.addEventListener("click", () => goDark(false, true));
+      lightButton.addEventListener("click", () => {
+        goDark(false, true);
+      });
+
+      lightButton.addEventListener("mouseenter", () => {
+        setColors(lightColors, true);
+        gsap.to(".splash_hero-light, .intro_background_light", {
+          opacity: 1,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+        gsap.to(".splash_hero-dark, .intro_background_dark", {
+          opacity: 0,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+      });
+
+      lightButton.addEventListener("mouseleave", () => {
+        const darkClass = htmlElement.classList.contains("dark-mode");
+        if (darkClass) {
+          setColors(darkColors, true);
+          gsap.to(".splash_hero-light, .intro_background_light", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        } else {
+          setColors(lightColors, true);
+        }
+      });
     }
 
     if (darkButton) {
-      darkButton.addEventListener("click", () => goDark(true, true));
+      darkButton.addEventListener("click", () => {
+        goDark(true, true);
+      });
+
+      darkButton.addEventListener("mouseenter", () => {
+        setColors(darkColors, true);
+        gsap.to(".splash_hero-dark, .intro_background_dark", {
+          opacity: 1,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+        gsap.to(".splash_hero-light, .intro_background_light", {
+          opacity: 0,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+      });
+
+      darkButton.addEventListener("mouseleave", () => {
+        const darkClass = htmlElement.classList.contains("dark-mode");
+        if (darkClass) {
+          setColors(darkColors, true);
+        } else {
+          setColors(lightColors, true);
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+          gsap.to(".splash_hero-light, .intro_background_light", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        }
+      });
     }
   });
 }
-
-// Initialize color mode toggle
-colorModeToggle();
