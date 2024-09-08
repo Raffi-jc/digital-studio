@@ -60,13 +60,4 @@ tl.to(
   0,
 );
 
-// Apply blending mode to .loading_animation depending on mode
-if (isDarkMode) {
-  gsap.set("._loading_animation", {
-    css: { mixBlendMode: "darken" },
-  });
-} else {
-  gsap.set("._loading_animation", {
-    css: { mixBlendMode: "screen" }, // Default blending mode is 'screen'
-  });
-}
+// Removed blending mode setting code
