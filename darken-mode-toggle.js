@@ -126,7 +126,7 @@ function colorModeToggle() {
 
       // Reset mix-blend-mode to default in light mode
       if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'normal'; // Adjust if you want a different mode for light mode
+        loadingAnimation.style.mixBlendMode = 'screen'; // Adjust if you want a different mode for light mode
       }
     }
     window.dispatchEvent(new Event('colorModeToggle'));
