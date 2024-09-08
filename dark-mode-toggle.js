@@ -8,7 +8,8 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-  console.log("howdy pardner");
+  console.log("Color mode toggle initialized");
+  
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -21,7 +22,6 @@ function colorModeToggle() {
 
   const htmlElement = document.documentElement;
   const computed = getComputedStyle(htmlElement);
-  let togglePressed = "false";
 
   const scriptTag = document.querySelector("[tr-color-vars]");
   if (!scriptTag) {
@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`);
-    let darkValue = computed.getPropertyValue(`--dark--${item}`);
+    let lightValue = computed.getPropertyValue(`--color--${item}`).trim();
+    let darkValue = computed.getPropertyValue(`--dark--${item}`).trim();
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
       lightColors[`--color--${item}`] = lightValue;
-      darkColors[`--dark--${item}`] = darkValue;
+      darkColors[`--color--${item}`] = darkValue;
     }
   });
 
@@ -85,11 +85,9 @@ function colorModeToggle() {
         ease: colorModeEase,
         onComplete: () => {
           if (dark) {
-            document.querySelector(".intro_background_dark").style.display =
-              "block";
+            document.querySelector(".intro_background_dark").style.display = "block";
           } else {
-            document.querySelector(".intro_background_dark").style.display =
-              "none";
+            document.querySelector(".intro_background_dark").style.display = "none";
           }
         },
       }
@@ -109,21 +107,12 @@ function colorModeToggle() {
       localStorage.setItem("dark-mode", "true");
       htmlElement.classList.add("dark-mode");
       setColors(darkColors, animate);
-      togglePressed = "true";
     } else {
       localStorage.setItem("dark-mode", "false");
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
-      togglePressed = "false";
     }
-    window.dispatchEvent(new Event("colorModeToggle"));
-  }
-
-  function simulateHover(button) {
-    if (button) {
-      const mouseEnterEvent = new Event("mouseenter");
-      button.dispatchEvent(mouseEnterEvent);
-    }
+    window.dispatchEvent(new Event('colorModeToggle'));
   }
 
   window.addEventListener("DOMContentLoaded", (event) => {
@@ -132,97 +121,20 @@ function colorModeToggle() {
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
-      if (storagePreference === "true") {
-        goDark(true, false);
-        simulateHover(darkButton);
-      } else {
-        goDark(false, false);
-        simulateHover(lightButton);
-      }
+      goDark(storagePreference === "true", false);
     } else {
-      // Default to light mode if no preference is stored
-      goDark(false, false);
+      goDark(false, false);  // Default to light mode if no preference is set
     }
 
     if (lightButton) {
-      lightButton.addEventListener("click", () => {
-        goDark(false, true);
-      });
-
-      lightButton.addEventListener("mouseenter", () => {
-        setColors(lightColors, true);
-        gsap.to(".splash_hero-light, .intro_background_light", {
-          opacity: 1,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-        gsap.to(".splash_hero-dark, .intro_background_dark", {
-          opacity: 0,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-      });
-
-      lightButton.addEventListener("mouseleave", () => {
-        const darkClass = htmlElement.classList.contains("dark-mode");
-        if (darkClass) {
-          setColors(darkColors, true);
-          gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-        } else {
-          setColors(lightColors, true);
-        }
-      });
+      lightButton.addEventListener("click", () => goDark(false, true));
     }
 
     if (darkButton) {
-      darkButton.addEventListener("click", () => {
-        goDark(true, true);
-      });
-
-      darkButton.addEventListener("mouseenter", () => {
-        setColors(darkColors, true);
-        gsap.to(".splash_hero-dark, .intro_background_dark", {
-          opacity: 1,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-        gsap.to(".splash_hero-light, .intro_background_light", {
-          opacity: 0,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-      });
-
-      darkButton.addEventListener("mouseleave", () => {
-        const darkClass = htmlElement.classList.contains("dark-mode");
-        if (darkClass) {
-          setColors(darkColors, true);
-        } else {
-          setColors(lightColors, true);
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-        }
-      });
+      darkButton.addEventListener("click", () => goDark(true, true));
     }
   });
 }
 
-// Call the function for all devices (mobile included)
+// Trigger the color mode toggle
 colorModeToggle();
