@@ -8,7 +8,6 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-  console.log('testing A');
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -105,29 +104,23 @@ function colorModeToggle() {
 
   function goDark(dark, animate) {
     animateHeroElements(dark);
+    
+    // Set mix-blend-mode for .loading_animation
     const loadingAnimation = document.querySelector('.loading_animation');
+    if (loadingAnimation) {
+      loadingAnimation.style.mixBlendMode = dark ? 'darken' : 'screen';
+    }
 
     if (dark) {
       localStorage.setItem("dark-mode", "true");
       htmlElement.classList.add("dark-mode");
       setColors(darkColors, animate);
       togglePressed = "true";
-
-      // Change mix-blend-mode to 'darken' in dark mode
-      if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'darken';
-      }
-
     } else {
       localStorage.setItem("dark-mode", "false");
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
       togglePressed = "false";
-
-      // Reset mix-blend-mode to default in light mode
-      if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'normal'; // Adjust if you want a different mode for light mode
-      }
     }
     window.dispatchEvent(new Event('colorModeToggle'));
   }
