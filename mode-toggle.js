@@ -8,7 +8,7 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-	console.log("howdy pardner :D");
+	console.log('testing A');
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue('--color--${item}');
-    let darkValue = computed.getPropertyValue('--dark--${item}');
+    let lightValue = computed.getPropertyValue(`--color--${item}`);
+    let darkValue = computed.getPropertyValue(`--dark--${item}`);
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[--color--${item}] = lightValue;
-      darkColors[--color--${item}] = darkValue;
+      lightColors[`--color--${item}`] = lightValue;
+      darkColors[`--color--${item}`] = darkValue;
     }
   });
 
@@ -230,3 +230,5 @@ function colorModeToggle() {
     }
   });
 }
+
+colorModeToggle();
