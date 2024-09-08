@@ -8,7 +8,7 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-  console.log("howdy pardner");
+	console.log("howdy pardner :)");
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`);
-    let darkValue = computed.getPropertyValue(`--dark--${item}`);
+    let lightValue = computed.getPropertyValue(--color--${item});
+    let darkValue = computed.getPropertyValue(--dark--${item});
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[`--color--${item}`] = lightValue;
-      darkColors[`--color--${item}`] = darkValue;
+      lightColors[--color--${item}] = lightValue;
+      darkColors[--color--${item}] = darkValue;
     }
   });
 
@@ -119,6 +119,14 @@ function colorModeToggle() {
     window.dispatchEvent(new Event('colorModeToggle'));
   }
 
+  // Debounced function for handling media query changes
+  const debouncedCheckPreference = debounce((e) => {
+    goDark(e.matches, false);
+  }, 300);
+
+  const colorPreference = window.matchMedia("(prefers-color-scheme: dark)");
+  colorPreference.addEventListener("change", debouncedCheckPreference);
+
   function simulateHover(button) {
     if (button) {
       const mouseEnterEvent = new Event("mouseenter");
@@ -139,6 +147,8 @@ function colorModeToggle() {
         goDark(false, false);
         simulateHover(lightButton);
       }
+    } else {
+      goDark(colorPreference.matches, false);
     }
 
     if (lightButton) {
