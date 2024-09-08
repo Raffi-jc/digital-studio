@@ -8,7 +8,7 @@ let loadDuration = 5;
 const isDarkMode = document.documentElement.classList.contains("dark-mode");
 
 if (sessionStorage.getItem("visited") !== null) {
-  loadDuration = 2;
+  loadDuration = 5;
   counter = {
     value: 75,
   };
