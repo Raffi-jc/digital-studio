@@ -1,15 +1,6 @@
-// Debounce function
-function debounce(func, wait) {
-  let timeout;
-  return function (...args) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, args), wait);
-  };
-}
-
 function colorModeToggle() {
   console.log("Color mode toggle initialized");
-  
+
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -41,18 +32,23 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
 
-  // Split the cssVariables string and trim each item to avoid unwanted spaces
+  // Split and process each CSS variable
   cssVariables.split(",").forEach(function (item) {
-    let trimmedItem = item.trim(); // Ensure no extra spaces around the variable name
-
-    // Retrieve the light and dark values from CSS variables
+    let trimmedItem = item.trim();
     let lightValue = computed.getPropertyValue(`--color--${trimmedItem}`).trim();
     let darkValue = computed.getPropertyValue(`--dark--${trimmedItem}`).trim();
+
+    // Debugging logs to see the fetched values
+    console.log(`Processing variable: ${trimmedItem}`);
+    console.log(`Light value: ${lightValue}`);
+    console.log(`Dark value: ${darkValue}`);
 
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
       lightColors[`--color--${trimmedItem}`] = lightValue;
       darkColors[`--color--${trimmedItem}`] = darkValue;
+    } else {
+      console.warn(`Light value for --color--${trimmedItem} not found!`);
     }
   });
 
@@ -62,6 +58,8 @@ function colorModeToggle() {
   }
 
   function setColors(colorObject, animate) {
+    console.log("Setting colors:", colorObject); // Logging colors for debugging
+
     if (typeof gsap !== "undefined" && animate) {
       gsap.to(htmlElement, {
         ...colorObject,
@@ -99,7 +97,6 @@ function colorModeToggle() {
       }
     );
 
-    // Handle .is-glow elements
     gsap.to(".is-glow", {
       opacity: dark ? 1 : 0,
       duration: colorModeDuration,
@@ -108,7 +105,10 @@ function colorModeToggle() {
   }
 
   function goDark(dark, animate) {
+    console.log(dark ? "Switching to dark mode" : "Switching to light mode");
+
     animateHeroElements(dark);
+
     if (dark) {
       localStorage.setItem("dark-mode", "true");
       htmlElement.classList.add("dark-mode");
@@ -118,10 +118,11 @@ function colorModeToggle() {
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
     }
-    window.dispatchEvent(new Event('colorModeToggle'));
+
+    window.dispatchEvent(new Event("colorModeToggle"));
   }
 
-  window.addEventListener("DOMContentLoaded", (event) => {
+  window.addEventListener("DOMContentLoaded", () => {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
 
@@ -129,7 +130,7 @@ function colorModeToggle() {
     if (storagePreference !== null) {
       goDark(storagePreference === "true", false);
     } else {
-      goDark(false, false);  // Default to light mode if no preference is set
+      goDark(false, false); // Default to light mode
     }
 
     if (lightButton) {
@@ -142,5 +143,5 @@ function colorModeToggle() {
   });
 }
 
-// Trigger the color mode toggle
+// Initialize color mode toggle
 colorModeToggle();
