@@ -40,6 +40,14 @@ function updateLoaderText() {
       ease: "power.out",
       delay: 1,
     });
+    
+    // Set display of .loader_button-link to block when the counter completes
+    gsap.to(".loader_button-link", {
+      display: "block",
+      duration: 0.5,
+      ease: "power.out",
+      delay: 0.5,
+    });
   }
 }
 
@@ -59,5 +67,3 @@ tl.to(
   },
   0,
 );
-
-// Removed blending mode setting code
