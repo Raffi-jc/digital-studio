@@ -61,7 +61,7 @@ tl.to(counter, {
 tl.to(
   ".loader_progress",
   {
-    transform: "translate(-4%, 44%)",
+    transform: "translate(-4%, 20%)",
     duration: loadDuration,
     ease: "power.out",
   },
