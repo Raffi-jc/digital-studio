@@ -27,11 +27,11 @@ function updateLoaderText() {
 
   // Once progress is 100, hold the text at "100" for a bit before showing "open"
   if (progress === 100) {
-    // Hold the "100" text for 0.3 seconds before fading out
+    // Hold the "100" text for 0.5 seconds before fading out
     gsap.delayedCall(0.5, () => {
       gsap.to(".text-loader", {
         opacity: 0,
-        duration: 0.3,
+        duration: 0.5,
         onComplete: () => {
           // After fading out, show "open"
           $(".text-loader").text("open");
@@ -39,15 +39,15 @@ function updateLoaderText() {
             opacity: 1,
             duration: 0.5,
           });
+
+          // Fade in the .loader_audio-prompt at the same time as the "open" text
+          gsap.to(".loader_audio-prompt", {
+            opacity: 1,
+            duration: 0.5,
+            ease: "power.out",
+          });
         },
       });
-    });
-
-    gsap.to(".loader_audio-prompt", {
-      opacity: 1,
-      duration: 1,
-      ease: "power.out",
-      delay: 1,
     });
 
     gsap.to(".loader_button-link", {
