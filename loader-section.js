@@ -25,24 +25,22 @@ function updateLoaderText() {
     $(".text-loader").text(progress);
   }
 
-  // Once progress is 100, display "100" and then transition to "open" after a slight delay
+  // Once progress is 100, hold the text at "100" for a bit before showing "open"
   if (progress === 100) {
-    gsap.to(".text-loader", {
-      opacity: 0,
-      duration: 0.5,
-      onComplete: () => {
-        // Slight delay before showing "open"
-        gsap.to(".text-loader", {
-          delay: 0.3, // 0.3 seconds delay
-          onComplete: () => {
-            $(".text-loader").text("open");
-            gsap.to(".text-loader", {
-              opacity: 1,
-              duration: 0.5,
-            });
-          },
-        });
-      },
+    // Hold the "100" text for 0.3 seconds before fading out
+    gsap.delayedCall(0.5, () => {
+      gsap.to(".text-loader", {
+        opacity: 0,
+        duration: 0.3,
+        onComplete: () => {
+          // After fading out, show "open"
+          $(".text-loader").text("open");
+          gsap.to(".text-loader", {
+            opacity: 1,
+            duration: 0.5,
+          });
+        },
+      });
     });
 
     gsap.to(".loader_audio-prompt", {
