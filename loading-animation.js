@@ -8,9 +8,9 @@ let loadDuration = 5;
 const isDarkMode = document.documentElement.classList.contains("dark-mode");
 
 if (sessionStorage.getItem("visited") !== null) {
-  loadDuration = 6;
+  loadDuration = 4;
   counter = {
-    value: 75,
+    value: 50,
   };
 }
 
@@ -19,7 +19,7 @@ sessionStorage.setItem("visited", "true");
 function updateLoaderText() {
   console.log("pardner loading");
   let progress = Math.round(counter.value);
-  if (progress < 100) {
+  if (progress < 101) {
     $(".text-loader").text(progress);
   } else {
     gsap.to(".text-loader", {
