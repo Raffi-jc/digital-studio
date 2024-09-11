@@ -19,9 +19,14 @@ sessionStorage.setItem("visited", "true");
 function updateLoaderText() {
   console.log("pardner loading");
   let progress = Math.round(counter.value);
-  if (progress < 101) {
+  
+  // If progress is less than 100, display the current progress
+  if (progress <= 100) {
     $(".text-loader").text(progress);
-  } else {
+  }
+
+  // Once progress is 100, display "100" and then transition to "open"
+  if (progress === 100) {
     gsap.to(".text-loader", {
       opacity: 0,
       duration: 0.5,
@@ -40,8 +45,7 @@ function updateLoaderText() {
       ease: "power.out",
       delay: 1,
     });
-    
-    // Set display of .loader_button-link to block when the counter completes
+
     gsap.to(".loader_button-link", {
       display: "block",
       duration: 0.5,
