@@ -8,7 +8,7 @@ let loadDuration = 5;
 const isDarkMode = document.documentElement.classList.contains("dark-mode");
 
 if (sessionStorage.getItem("visited") !== null) {
-  loadDuration = 5;
+  loadDuration = 6;
   counter = {
     value: 75,
   };
@@ -61,7 +61,7 @@ tl.to(counter, {
 tl.to(
   ".loader_progress",
   {
-    transform: "translate(-4%, 29%)",
+    transform: "translate(-4%, 44%)",
     duration: loadDuration,
     ease: "power.out",
   },
