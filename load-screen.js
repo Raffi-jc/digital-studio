@@ -26,7 +26,7 @@ function updateLoaderText() {
       opacity: 0,
       duration: 0.5,
       onComplete: () => {
-        $(".text-loader").text("enter");
+        $(".text-loader").text("open");
         gsap.to(".text-loader", {
           opacity: 1,
           duration: 0.5,
