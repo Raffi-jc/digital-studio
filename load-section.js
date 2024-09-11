@@ -25,16 +25,22 @@ function updateLoaderText() {
     $(".text-loader").text(progress);
   }
 
-  // Once progress is 100, display "100" and then transition to "open"
+  // Once progress is 100, display "100" and then transition to "open" after a slight delay
   if (progress === 100) {
     gsap.to(".text-loader", {
       opacity: 0,
       duration: 0.5,
       onComplete: () => {
-        $(".text-loader").text("open");
+        // Slight delay before showing "open"
         gsap.to(".text-loader", {
-          opacity: 1,
-          duration: 0.5,
+          delay: 0.3, // 0.3 seconds delay
+          onComplete: () => {
+            $(".text-loader").text("open");
+            gsap.to(".text-loader", {
+              opacity: 1,
+              duration: 0.5,
+            });
+          },
         });
       },
     });
