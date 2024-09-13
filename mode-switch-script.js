@@ -9,16 +9,7 @@ function debounce(func, wait) {
 
 function colorModeToggle() {
   console.log('testing A');
-  function attr(defaultVal, attrVal) {
-    const defaultValType = typeof defaultVal;
-    if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
-    if (attrVal === "true" && defaultValType === "boolean") return true;
-    if (attrVal === "false" && defaultValType === "boolean") return false;
-    if (isNaN(attrVal) && defaultValType === "string") return attrVal;
-    if (!isNaN(attrVal) && defaultValType === "number") return +attrVal;
-    return defaultVal;
-  }
-
+  
   const htmlElement = document.documentElement;
   const computed = getComputedStyle(htmlElement);
   let togglePressed = "false";
@@ -29,22 +20,21 @@ function colorModeToggle() {
     return;
   }
 
-  let colorModeDuration = attr(0.5, scriptTag.getAttribute("duration"));
-  let colorModeEase = attr("power1.out", scriptTag.getAttribute("ease"));
+  const colorModeDuration = parseFloat(scriptTag.getAttribute("duration")) || 0.5;
+  const colorModeEase = scriptTag.getAttribute("ease") || "power1.out";
 
   const cssVariables = scriptTag.getAttribute("tr-color-vars");
-  if (!cssVariables.length) {
+  if (!cssVariables) {
     console.warn("Value of tr-color-vars attribute not found");
     return;
   }
 
-  let lightColors = {};
-  let darkColors = {};
-  cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`);
-    let darkValue = computed.getPropertyValue(`--dark--${item}`);
-    if (lightValue.length) {
-      if (!darkValue.length) darkValue = lightValue;
+  const lightColors = {};
+  const darkColors = {};
+  cssVariables.split(",").forEach(item => {
+    const lightValue = computed.getPropertyValue(`--color--${item}`);
+    const darkValue = computed.getPropertyValue(`--dark--${item}`) || lightValue;
+    if (lightValue) {
       lightColors[`--color--${item}`] = lightValue;
       darkColors[`--color--${item}`] = darkValue;
     }
@@ -63,39 +53,25 @@ function colorModeToggle() {
         ease: colorModeEase,
       });
     } else {
-      Object.keys(colorObject).forEach(function (key) {
+      Object.keys(colorObject).forEach(key => {
         htmlElement.style.setProperty(key, colorObject[key]);
       });
     }
   }
 
   function animateHeroElements(dark) {
-    gsap.to(
-      [
-        ".splash_hero-dark",
-        ".hero_dark-mode",
-        ".intro_background_dark",
-        ".splash_hero-light",
-        ".hero_light-mode",
-        ".intro_background_light",
-      ],
-      {
-        opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
-        duration: colorModeDuration,
-        ease: colorModeEase,
-        onComplete: () => {
-          if (dark) {
-            document.querySelector(".intro_background_dark").style.display =
-              "block";
-          } else {
-            document.querySelector(".intro_background_dark").style.display =
-              "none";
-          }
-        },
-      }
-    );
+    gsap.to([
+      ".splash_hero-dark", ".hero_dark-mode", ".intro_background_dark",
+      ".splash_hero-light", ".hero_light-mode", ".intro_background_light"
+    ], {
+      opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
+      duration: colorModeDuration,
+      ease: colorModeEase,
+      onComplete: () => {
+        document.querySelector(".intro_background_dark").style.display = dark ? "block" : "none";
+      },
+    });
 
-    // Handle .is-glow elements
     gsap.to(".is-glow", {
       opacity: dark ? 1 : 0,
       duration: colorModeDuration,
@@ -112,27 +88,21 @@ function colorModeToggle() {
       htmlElement.classList.add("dark-mode");
       setColors(darkColors, animate);
       togglePressed = "true";
-
-      // Change mix-blend-mode to 'darken' in dark mode
       if (loadingAnimation) {
         loadingAnimation.style.mixBlendMode = 'darken';
       }
-
     } else {
       localStorage.setItem("dark-mode", "false");
       htmlElement.classList.remove("dark-mode");
       setColors(lightColors, animate);
       togglePressed = "false";
-
-      // Reset mix-blend-mode to default in light mode
       if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'screen'; // Adjust if you want a different mode for light mode
+        loadingAnimation.style.mixBlendMode = 'screen';
       }
     }
     window.dispatchEvent(new Event('colorModeToggle'));
   }
 
-  // Debounced function for handling media query changes
   const debouncedCheckPreference = debounce((e) => {
     goDark(e.matches, false);
   }, 300);
@@ -142,12 +112,11 @@ function colorModeToggle() {
 
   function simulateHover(button) {
     if (button) {
-      const mouseEnterEvent = new Event("mouseenter");
-      button.dispatchEvent(mouseEnterEvent);
+      button.dispatchEvent(new Event("mouseenter"));
     }
   }
 
-  window.addEventListener("DOMContentLoaded", (event) => {
+  window.addEventListener("DOMContentLoaded", () => {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
 
@@ -165,10 +134,7 @@ function colorModeToggle() {
     }
 
     if (lightButton) {
-      lightButton.addEventListener("click", () => {
-        goDark(false, true);
-      });
-
+      lightButton.addEventListener("click", () => goDark(false, true));
       lightButton.addEventListener("mouseenter", () => {
         setColors(lightColors, true);
         gsap.to(".splash_hero-light, .intro_background_light", {
@@ -182,7 +148,6 @@ function colorModeToggle() {
           ease: colorModeEase,
         });
       });
-
       lightButton.addEventListener("mouseleave", () => {
         const darkClass = htmlElement.classList.contains("dark-mode");
         if (darkClass) {
@@ -204,10 +169,7 @@ function colorModeToggle() {
     }
 
     if (darkButton) {
-      darkButton.addEventListener("click", () => {
-        goDark(true, true);
-      });
-
+      darkButton.addEventListener("click", () => goDark(true, true));
       darkButton.addEventListener("mouseenter", () => {
         setColors(darkColors, true);
         gsap.to(".splash_hero-dark, .intro_background_dark", {
@@ -221,7 +183,6 @@ function colorModeToggle() {
           ease: colorModeEase,
         });
       });
-
       darkButton.addEventListener("mouseleave", () => {
         const darkClass = htmlElement.classList.contains("dark-mode");
         if (darkClass) {
