@@ -8,6 +8,8 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
+  console.log('testing A');
+
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -59,12 +61,12 @@ function colorModeToggle() {
       gsap.to(htmlElement, {
         ...colorObject,
         duration: colorModeDuration,
-        ease: colorModeEase,
+        ease: colorModeEase
       });
     } else {
-      Object.keys(colorObject).forEach(function (key) {
-        htmlElement.style.setProperty(key, colorObject[key]);
-      });
+      for (const [key, value] of Object.entries(colorObject)) {
+        htmlElement.style.setProperty(key, value);
+      }
     }
   }
 
@@ -137,109 +139,161 @@ function colorModeToggle() {
   const colorPreference = window.matchMedia("(prefers-color-scheme: dark)");
   colorPreference.addEventListener("change", debouncedCheckPreference);
 
-  function simulateHover(button) {
-    if (button) {
-      const mouseEnterEvent = new Event("mouseenter");
-      button.dispatchEvent(mouseEnterEvent);
+  // Hover effect - exclude elements with the .is-nav class
+  const buttons = document.querySelectorAll('.light-button, .dark-button');
+  buttons.forEach(button => {
+    if (!button.classList.contains('is-nav')) {
+      button.addEventListener('mouseenter', () => {
+        const isLightButton = button.classList.contains('light-button');
+        const isDarkButton = button.classList.contains('dark-button');
+
+        // Apply hover effect for light and dark buttons
+        if (isLightButton) {
+          setColors(lightColors, true);
+          gsap.to(".splash_hero-light, .intro_background_light", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        } else if (isDarkButton) {
+          setColors(darkColors, true);
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+          gsap.to(".splash_hero-light, .intro_background_light", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        }
+      });
+
+      button.addEventListener('mouseleave', () => {
+        const darkClass = htmlElement.classList.contains("dark-mode");
+        if (darkClass) {
+          setColors(darkColors, true);
+          gsap.to(".splash_hero-light, .intro_background_light", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        } else {
+          setColors(lightColors, true);
+        }
+      });
     }
-  }
+  });
 
   window.addEventListener("DOMContentLoaded", (event) => {
-    // Select all buttons with both navbar and welcome screen support
-    const lightButtons = document.querySelectorAll(".light-button");
-    const darkButtons = document.querySelectorAll(".dark-button");
+    const lightButton = document.querySelector(".light-button");
+    const darkButton = document.querySelector(".dark-button");
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
       if (storagePreference === "true") {
         goDark(true, false);
-        simulateHover(darkButtons[0]);
       } else {
         goDark(false, false);
-        simulateHover(lightButtons[0]);
       }
     } else {
       goDark(colorPreference.matches, false);
     }
 
-    // Attach event listeners to all buttons
-    lightButtons.forEach(button => {
-      button.addEventListener("click", () => {
+    if (lightButton) {
+      lightButton.addEventListener("click", () => {
         goDark(false, true);
       });
 
-      button.addEventListener("mouseenter", () => {
-        setColors(lightColors, true);
-        gsap.to(".splash_hero-light, .intro_background_light", {
-          opacity: 1,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-        gsap.to(".splash_hero-dark, .intro_background_dark", {
-          opacity: 0,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-      });
-
-      button.addEventListener("mouseleave", () => {
-        const darkClass = htmlElement.classList.contains("dark-mode");
-        if (darkClass) {
-          setColors(darkColors, true);
+      // No hover effect for .is-nav buttons
+      if (!lightButton.classList.contains('is-nav')) {
+        lightButton.addEventListener("mouseenter", () => {
+          setColors(lightColors, true);
           gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
             opacity: 1,
             duration: colorModeDuration,
             ease: colorModeEase,
           });
-        } else {
-          setColors(lightColors, true);
-        }
-      });
-    });
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        });
 
-    darkButtons.forEach(button => {
-      button.addEventListener("click", () => {
+        lightButton.addEventListener("mouseleave", () => {
+          const darkClass = htmlElement.classList.contains("dark-mode");
+          if (darkClass) {
+            setColors(darkColors, true);
+            gsap.to(".splash_hero-light, .intro_background_light", {
+              opacity: 0,
+              duration: colorModeDuration,
+              ease: colorModeEase,
+            });
+            gsap.to(".splash_hero-dark, .intro_background_dark", {
+              opacity: 1,
+              duration: colorModeDuration,
+              ease: colorModeEase,
+            });
+          } else {
+            setColors(lightColors, true);
+          }
+        });
+      }
+    }
+
+    if (darkButton) {
+      darkButton.addEventListener("click", () => {
         goDark(true, true);
       });
 
-      button.addEventListener("mouseenter", () => {
-        setColors(darkColors, true);
-        gsap.to(".splash_hero-dark, .intro_background_dark", {
-          opacity: 1,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-        gsap.to(".splash_hero-light, .intro_background_light", {
-          opacity: 0,
-          duration: colorModeDuration,
-          ease: colorModeEase,
-        });
-      });
-
-      button.addEventListener("mouseleave", () => {
-        const darkClass = htmlElement.classList.contains("dark-mode");
-        if (darkClass) {
+      // No hover effect for .is-nav buttons
+      if (!darkButton.classList.contains('is-nav')) {
+        darkButton.addEventListener("mouseenter", () => {
           setColors(darkColors, true);
-        } else {
-          setColors(lightColors, true);
           gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-light, .intro_background_light", {
             opacity: 1,
             duration: colorModeDuration,
             ease: colorModeEase,
           });
-        }
-      });
-    });
+          gsap.to(".splash_hero-light, .intro_background_light", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        });
+
+        darkButton.addEventListener("mouseleave", () => {
+          const darkClass = htmlElement.classList.contains("dark-mode");
+          if (darkClass) {
+            setColors(darkColors, true);
+            gsap.to(".splash_hero-light, .intro_background_light", {
+              opacity: 0,
+              duration: colorModeDuration,
+              ease: colorModeEase,
+            });
+            gsap.to(".splash_hero-dark, .intro_background_dark", {
+              opacity: 1,
+              duration: colorModeDuration,
+              ease: colorModeEase,
+            });
+          } else {
+            setColors(lightColors, true);
+          }
+        });
+      }
+    }
   });
 }
 
