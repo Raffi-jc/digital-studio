@@ -140,12 +140,12 @@ function colorModeToggle() {
   colorPreference.addEventListener("change", debouncedCheckPreference);
 
   // Hover effect - exclude elements with the .is-nav class
-  const buttons = document.querySelectorAll('.light-button, .dark-button');
+  const buttons = document.querySelectorAll('.nav-light-button, .nav-dark-button');
   buttons.forEach(button => {
     if (!button.classList.contains('is-nav')) {
       button.addEventListener('mouseenter', () => {
-        const isLightButton = button.classList.contains('light-button');
-        const isDarkButton = button.classList.contains('dark-button');
+        const isLightButton = button.classList.contains('nav-light-button');
+        const isDarkButton = button.classList.contains('nav-dark-button');
 
         // Apply hover effect for light and dark buttons
         if (isLightButton) {
@@ -197,8 +197,8 @@ function colorModeToggle() {
   });
 
   window.addEventListener("DOMContentLoaded", (event) => {
-    const lightButton = document.querySelector(".light-button");
-    const darkButton = document.querySelector(".dark-button");
+    const lightButton = document.querySelector(".nav-light-button");
+    const darkButton = document.querySelector(".nav-dark-button");
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
