@@ -61,12 +61,12 @@ function colorModeToggle() {
       gsap.to(htmlElement, {
         ...colorObject,
         duration: colorModeDuration,
-        ease: colorModeEase
+        ease: colorModeEase,
       });
     } else {
-      for (const [key, value] of Object.entries(colorObject)) {
-        htmlElement.style.setProperty(key, value);
-      }
+      Object.keys(colorObject).forEach(function (key) {
+        htmlElement.style.setProperty(key, colorObject[key]);
+      });
     }
   }
 
@@ -74,10 +74,10 @@ function colorModeToggle() {
     gsap.to(
       [
         ".splash_hero-dark",
-        ".hero_dark-mode",
+        ".hero_dark-mode",  // Added here
         ".intro_background_dark",
         ".splash_hero-light",
-        ".hero_light-mode",
+        ".hero_light-mode", // Added here
         ".intro_background_light",
       ],
       {
@@ -86,9 +86,11 @@ function colorModeToggle() {
         ease: colorModeEase,
         onComplete: () => {
           if (dark) {
-            document.querySelector(".intro_background_dark").style.display = "block";
+            document.querySelector(".intro_background_dark").style.display =
+              "block";
           } else {
-            document.querySelector(".intro_background_dark").style.display = "none";
+            document.querySelector(".intro_background_dark").style.display =
+              "none";
           }
         },
       }
@@ -125,7 +127,7 @@ function colorModeToggle() {
 
       // Reset mix-blend-mode to default in light mode
       if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'screen'; // Adjust if you want a different mode for light mode
+        loadingAnimation.style.mixBlendMode = 'screen'; 
       }
     }
     window.dispatchEvent(new Event('colorModeToggle'));
@@ -139,73 +141,42 @@ function colorModeToggle() {
   const colorPreference = window.matchMedia("(prefers-color-scheme: dark)");
   colorPreference.addEventListener("change", debouncedCheckPreference);
 
-  // Hover effect - exclude elements with the .is-nav class
-  const buttons = document.querySelectorAll('.nav-light-button, .nav-dark-button');
-  buttons.forEach(button => {
-    if (!button.classList.contains('is-nav')) {
-      button.addEventListener('mouseenter', () => {
-        const isLightButton = button.classList.contains('nav-light-button');
-        const isDarkButton = button.classList.contains('nav-dark-button');
+  function simulateHover(button) {
+    if (button) {
+      const mouseEnterEvent = new Event("mouseenter");
+      button.dispatchEvent(mouseEnterEvent);
+    }
+  }
 
-        // Apply hover effect for light and dark buttons
-        if (isLightButton) {
-          setColors(lightColors, true);
-          gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-        } else if (isDarkButton) {
-          setColors(darkColors, true);
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-        }
-      });
+  function handleNavButtons() {
+    const navLightButton = document.querySelector(".nav-light-button");
+    const navDarkButton = document.querySelector(".nav-dark-button");
 
-      button.addEventListener('mouseleave', () => {
-        const darkClass = htmlElement.classList.contains("dark-mode");
-        if (darkClass) {
-          setColors(darkColors, true);
-          gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 0,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-        } else {
-          setColors(lightColors, true);
-        }
+    if (navLightButton) {
+      navLightButton.addEventListener("click", () => {
+        goDark(false, true);
       });
     }
-  });
+
+    if (navDarkButton) {
+      navDarkButton.addEventListener("click", () => {
+        goDark(true, true);
+      });
+    }
+  }
 
   window.addEventListener("DOMContentLoaded", (event) => {
-    const lightButton = document.querySelector(".nav-light-button");
-    const darkButton = document.querySelector(".nav-dark-button");
+    const lightButton = document.querySelector(".light-button");
+    const darkButton = document.querySelector(".dark-button");
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
       if (storagePreference === "true") {
         goDark(true, false);
+        simulateHover(darkButton);
       } else {
         goDark(false, false);
+        simulateHover(lightButton);
       }
     } else {
       goDark(colorPreference.matches, false);
@@ -216,41 +187,38 @@ function colorModeToggle() {
         goDark(false, true);
       });
 
-      // No hover effect for .is-nav buttons
-      if (!lightButton.classList.contains('is-nav')) {
-        lightButton.addEventListener("mouseenter", () => {
-          setColors(lightColors, true);
-          gsap.to(".splash_hero-light, .intro_background_light", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
+      lightButton.addEventListener("mouseenter", () => {
+        setColors(lightColors, true);
+        gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+          opacity: 1,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+        gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+          opacity: 0,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+      });
+
+      lightButton.addEventListener("mouseleave", () => {
+        const darkClass = htmlElement.classList.contains("dark-mode");
+        if (darkClass) {
+          setColors(darkColors, true);
+          gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
             opacity: 0,
             duration: colorModeDuration,
             ease: colorModeEase,
           });
-        });
-
-        lightButton.addEventListener("mouseleave", () => {
-          const darkClass = htmlElement.classList.contains("dark-mode");
-          if (darkClass) {
-            setColors(darkColors, true);
-            gsap.to(".splash_hero-light, .intro_background_light", {
-              opacity: 0,
-              duration: colorModeDuration,
-              ease: colorModeEase,
-            });
-            gsap.to(".splash_hero-dark, .intro_background_dark", {
-              opacity: 1,
-              duration: colorModeDuration,
-              ease: colorModeEase,
-            });
-          } else {
-            setColors(lightColors, true);
-          }
-        });
-      }
+          gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        } else {
+          setColors(lightColors, true);
+        }
+      });
     }
 
     if (darkButton) {
@@ -258,42 +226,42 @@ function colorModeToggle() {
         goDark(true, true);
       });
 
-      // No hover effect for .is-nav buttons
-      if (!darkButton.classList.contains('is-nav')) {
-        darkButton.addEventListener("mouseenter", () => {
+      darkButton.addEventListener("mouseenter", () => {
+        setColors(darkColors, true);
+        gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+          opacity: 1,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+        gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+          opacity: 0,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        });
+      });
+
+      darkButton.addEventListener("mouseleave", () => {
+        const darkClass = htmlElement.classList.contains("dark-mode");
+        if (darkClass) {
           setColors(darkColors, true);
-          gsap.to(".splash_hero-dark, .intro_background_dark", {
-            opacity: 1,
-            duration: colorModeDuration,
-            ease: colorModeEase,
-          });
-          gsap.to(".splash_hero-light, .intro_background_light", {
+        } else {
+          setColors(lightColors, true);
+          gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
             opacity: 0,
             duration: colorModeDuration,
             ease: colorModeEase,
           });
-        });
-
-        darkButton.addEventListener("mouseleave", () => {
-          const darkClass = htmlElement.classList.contains("dark-mode");
-          if (darkClass) {
-            setColors(darkColors, true);
-            gsap.to(".splash_hero-light, .intro_background_light", {
-              opacity: 0,
-              duration: colorModeDuration,
-              ease: colorModeEase,
-            });
-            gsap.to(".splash_hero-dark, .intro_background_dark", {
-              opacity: 1,
-              duration: colorModeDuration,
-              ease: colorModeEase,
-            });
-          } else {
-            setColors(lightColors, true);
-          }
-        });
-      }
+          gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+          });
+        }
+      });
     }
+
+    // Handle navigation buttons
+    handleNavButtons();
   });
 }
 
