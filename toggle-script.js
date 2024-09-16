@@ -9,7 +9,6 @@ function debounce(func, wait) {
 
 function colorModeToggle() {
   console.log('testing A');
-
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -74,10 +73,10 @@ function colorModeToggle() {
     gsap.to(
       [
         ".splash_hero-dark",
-        ".hero_dark-mode",  // Added here
+        ".hero_dark-mode",
         ".intro_background_dark",
         ".splash_hero-light",
-        ".hero_light-mode", // Added here
+        ".hero_light-mode",
         ".intro_background_light",
       ],
       {
@@ -127,7 +126,7 @@ function colorModeToggle() {
 
       // Reset mix-blend-mode to default in light mode
       if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'screen'; 
+        loadingAnimation.style.mixBlendMode = 'screen'; // Adjust if you want a different mode for light mode
       }
     }
     window.dispatchEvent(new Event('colorModeToggle'));
@@ -145,23 +144,6 @@ function colorModeToggle() {
     if (button) {
       const mouseEnterEvent = new Event("mouseenter");
       button.dispatchEvent(mouseEnterEvent);
-    }
-  }
-
-  function handleNavButtons() {
-    const navLightButton = document.querySelector(".nav-light-button");
-    const navDarkButton = document.querySelector(".nav-dark-button");
-
-    if (navLightButton) {
-      navLightButton.addEventListener("click", () => {
-        goDark(false, true);
-      });
-    }
-
-    if (navDarkButton) {
-      navDarkButton.addEventListener("click", () => {
-        goDark(true, true);
-      });
     }
   }
 
@@ -189,12 +171,12 @@ function colorModeToggle() {
 
       lightButton.addEventListener("mouseenter", () => {
         setColors(lightColors, true);
-        gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+        gsap.to(".splash_hero-light, .intro_background_light", {
           opacity: 1,
           duration: colorModeDuration,
           ease: colorModeEase,
         });
-        gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+        gsap.to(".splash_hero-dark, .intro_background_dark", {
           opacity: 0,
           duration: colorModeDuration,
           ease: colorModeEase,
@@ -205,12 +187,12 @@ function colorModeToggle() {
         const darkClass = htmlElement.classList.contains("dark-mode");
         if (darkClass) {
           setColors(darkColors, true);
-          gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+          gsap.to(".splash_hero-light, .intro_background_light", {
             opacity: 0,
             duration: colorModeDuration,
             ease: colorModeEase,
           });
-          gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
             opacity: 1,
             duration: colorModeDuration,
             ease: colorModeEase,
@@ -228,12 +210,12 @@ function colorModeToggle() {
 
       darkButton.addEventListener("mouseenter", () => {
         setColors(darkColors, true);
-        gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+        gsap.to(".splash_hero-dark, .intro_background_dark", {
           opacity: 1,
           duration: colorModeDuration,
           ease: colorModeEase,
         });
-        gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+        gsap.to(".splash_hero-light, .intro_background_light", {
           opacity: 0,
           duration: colorModeDuration,
           ease: colorModeEase,
@@ -246,12 +228,12 @@ function colorModeToggle() {
           setColors(darkColors, true);
         } else {
           setColors(lightColors, true);
-          gsap.to(".splash_hero-dark, .intro_background_dark, .hero_dark-mode", {
+          gsap.to(".splash_hero-dark, .intro_background_dark", {
             opacity: 0,
             duration: colorModeDuration,
             ease: colorModeEase,
           });
-          gsap.to(".splash_hero-light, .intro_background_light, .hero_light-mode", {
+          gsap.to(".splash_hero-light, .intro_background_light", {
             opacity: 1,
             duration: colorModeDuration,
             ease: colorModeEase,
@@ -259,9 +241,6 @@ function colorModeToggle() {
         }
       });
     }
-
-    // Handle navigation buttons
-    handleNavButtons();
   });
 }
 
