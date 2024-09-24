@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(`--color--${item}`);
-    let darkValue = computed.getPropertyValue(`--dark--${item}`);
+    let lightValue = computed.getPropertyValue(--color--${item});
+    let darkValue = computed.getPropertyValue(--dark--${item});
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[`--color--${item}`] = lightValue;
-      darkColors[`--color--${item}`] = darkValue;
+      lightColors[--color--${item}] = lightValue;
+      darkColors[--color--${item}] = darkValue;
     }
   });
 
@@ -74,11 +74,10 @@ function colorModeToggle() {
       [
         ".splash_hero-dark",
         ".hero_dark-mode",
-        ".intro_background_dark",
+        "#ripple-dark",
         ".splash_hero-light",
         ".hero_light-mode",
-        ".intro_background_light",
-        "#ripple-dark",
+        "#ripple-light",
       ],
       {
         opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
