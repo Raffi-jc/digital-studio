@@ -41,12 +41,12 @@ function colorModeToggle() {
   let lightColors = {};
   let darkColors = {};
   cssVariables.split(",").forEach(function (item) {
-    let lightValue = computed.getPropertyValue(--color--${item});
-    let darkValue = computed.getPropertyValue(--dark--${item});
+    let lightValue = computed.getPropertyValue(`--color--${item}`);
+    let darkValue = computed.getPropertyValue(`--dark--${item}`);
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[--color--${item}] = lightValue;
-      darkColors[--color--${item}] = darkValue;
+      lightColors[`--color--${item}`] = lightValue;
+      darkColors[`--color--${item}`] = darkValue;
     }
   });
 
@@ -150,6 +150,7 @@ function colorModeToggle() {
   window.addEventListener("DOMContentLoaded", (event) => {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
+    const modeToggleBtn = document.querySelector(".mode-toggle-btn"); // New toggle button
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
@@ -239,6 +240,14 @@ function colorModeToggle() {
             ease: colorModeEase,
           });
         }
+      });
+    }
+
+    // New mode-toggle-btn functionality
+    if (modeToggleBtn) {
+      modeToggleBtn.addEventListener("click", () => {
+        const isDarkMode = localStorage.getItem("dark-mode") === "true";
+        goDark(!isDarkMode, true);
       });
     }
   });
