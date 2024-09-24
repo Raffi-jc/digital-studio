@@ -70,31 +70,62 @@ function colorModeToggle() {
   }
 
   function animateHeroElements(dark) {
+    // Animate hero elements based on the current mode
     gsap.to(
-      [
-        ".splash_hero-dark",
-        ".hero_dark-mode",
-        ".intro_background_dark",
-        ".splash_hero-light",
-        ".hero_light-mode",
-        ".intro_background_light",
-      ],
-      {
-        opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
-        duration: colorModeDuration,
-        ease: colorModeEase,
-        onComplete: () => {
-          if (dark) {
-            document.querySelector(".intro_background_dark").style.display =
-              "block";
-          } else {
-            document.querySelector(".intro_background_dark").style.display =
-              "none";
-          }
-        },
-      }
+        [
+            ".splash_hero-dark",
+            ".hero_dark-mode",
+            ".splash_hero-light",
+            ".hero_light-mode",
+        ],
+        {
+            opacity: (i) => (dark ? (i < 2 ? 1 : 0) : i < 2 ? 0 : 1), // Adjust index for new array length
+            duration: colorModeDuration,
+            ease: colorModeEase,
+            onComplete: () => {
+                // Handle visibility of elements if needed
+            },
+        }
     );
+}
 
+  function animateIntroBackgrounds(dark) {
+    if (dark) {
+        // Set intro_background_dark to block and z-index 1
+        document.querySelector(".intro_background_dark").style.display = "block";
+        document.querySelector(".intro_background_dark").style.zIndex = "1";
+
+        // Animate intro_background_light opacity to 0
+        gsap.to(".intro_background_light", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+            onComplete: () => {
+                // Set display none and z-index 0 after animation completes
+                document.querySelector(".intro_background_light").style.display = "none";
+                document.querySelector(".intro_background_light").style.zIndex = "0";
+            },
+        });
+    } else {
+        // Set intro_background_light to block and z-index 1
+        document.querySelector(".intro_background_light").style.display = "block";
+        document.querySelector(".intro_background_light").style.zIndex = "1";
+
+        // Animate intro_background_dark opacity to 0
+        gsap.to(".intro_background_dark", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+            onComplete: () => {
+                // Set display none and z-index 0 after animation completes
+                document.querySelector(".intro_background_dark").style.display = "none";
+                document.querySelector(".intro_background_dark").style.zIndex = "0";
+            },
+        });
+    }
+}
+
+  
     // Handle .is-glow elements
     gsap.to(".is-glow", {
       opacity: dark ? 1 : 0,
