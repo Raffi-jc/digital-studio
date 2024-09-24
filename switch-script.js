@@ -70,30 +70,84 @@ function colorModeToggle() {
   }
 
   function animateHeroElements(dark) {
-    gsap.to(
-      [
-        ".splash_hero-dark",
-        ".hero_dark-mode",
-        ".intro_background_dark",
-        ".splash_hero-light",
-        ".hero_light-mode",
-        ".intro_background_light",
-      ],
-      {
-        opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
-        duration: colorModeDuration,
-        ease: colorModeEase,
-        onComplete: () => {
-          if (dark) {
-            document.querySelector(".intro_background_dark").style.display =
-              "block";
-          } else {
-            document.querySelector(".intro_background_dark").style.display =
-              "none";
-          }
-        },
-      }
-    );
+    // Light mode
+    if (dark) {
+        // Animate intro_background_light to fade out
+        gsap.to(".intro_background_light", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+            onComplete: () => {
+                // After animation, hide the light background
+                document.querySelector(".intro_background_light").style.display = "none";
+                document.querySelector(".intro_background_light").style.zIndex = 0; // Set z-index to 0
+                document.querySelector(".intro_background_dark").style.display = "block";
+                document.querySelector(".intro_background_dark").style.zIndex = 1; // Set z-index to 1
+            }
+        });
+
+        // Animate intro_background_dark to fade in
+        gsap.to(".intro_background_dark", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+        });
+
+        // Handle opacity and visibility for hero elements
+        gsap.to(
+            [
+                ".splash_hero-dark",
+                ".hero_dark-mode",
+                ".splash_hero-light",
+                ".hero_light-mode",
+            ],
+            {
+                opacity: 1,
+                duration: colorModeDuration,
+                ease: colorModeEase,
+            }
+        );
+
+    } else {
+        // Dark mode
+        // Animate intro_background_dark to fade out
+        gsap.to(".intro_background_dark", {
+            opacity: 0,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+            onComplete: () => {
+                // After animation, hide the dark background
+                document.querySelector(".intro_background_dark").style.display = "none";
+                document.querySelector(".intro_background_dark").style.zIndex = 0; // Set z-index to 0
+                document.querySelector(".intro_background_light").style.display = "block";
+                document.querySelector(".intro_background_light").style.zIndex = 1; // Set z-index to 1
+            }
+        });
+
+        // Animate intro_background_light to fade in
+        gsap.to(".intro_background_light", {
+            opacity: 1,
+            duration: colorModeDuration,
+            ease: colorModeEase,
+        });
+
+        // Handle opacity and visibility for hero elements
+        gsap.to(
+            [
+                ".splash_hero-dark",
+                ".hero_dark-mode",
+                ".splash_hero-light",
+                ".hero_light-mode",
+            ],
+            {
+                opacity: 0,
+                duration: colorModeDuration,
+                ease: colorModeEase,
+            }
+        );
+    }
+}
+
 
     // Handle .is-glow elements
     gsap.to(".is-glow", {
