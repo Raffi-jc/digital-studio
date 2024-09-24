@@ -83,17 +83,19 @@ function colorModeToggle() {
         opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
         duration: colorModeDuration,
         ease: colorModeEase,
-        onComplete: () => {
+        onStart: () => {
           if (dark) {
-            document.querySelector(".intro_background_dark").style.display =
-              "block";
-          } else {
-            document.querySelector(".intro_background_dark").style.display =
-              "none";
+            document.querySelector(".intro_background_dark").style.display = "block";
+          }
+        },
+        onComplete: () => {
+          if (!dark) {
+            document.querySelector(".intro_background_dark").style.display = "none";
           }
         },
       }
     );
+}
 
     // Handle .is-glow elements
     gsap.to(".is-glow", {
