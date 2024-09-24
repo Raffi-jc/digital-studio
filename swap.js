@@ -74,10 +74,10 @@ function colorModeToggle() {
       [
         ".splash_hero-dark",
         ".hero_dark-mode",
-        "#ripple-dark",
         ".splash_hero-light",
         ".hero_light-mode",
         "#ripple-light",
+        "#ripple-dark",
       ],
       {
         opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
