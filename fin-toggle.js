@@ -74,10 +74,11 @@ function colorModeToggle() {
       [
         ".splash_hero-dark",
         ".hero_dark-mode",
-        ".intro_background_dark",
         ".splash_hero-light",
         ".hero_light-mode",
-        ".intro_background_light",
+        "#ripple-light",
+        "#ripple-dark",
+        
       ],
       {
         opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
@@ -85,10 +86,10 @@ function colorModeToggle() {
         ease: colorModeEase,
         onComplete: () => {
           if (dark) {
-            document.querySelector(".intro_background_dark").style.display =
+            document.querySelector("#ripple-dark").style.display =
               "block";
           } else {
-            document.querySelector(".intro_background_dark").style.display =
+            document.querySelector("#ripple-dark").style.display =
               "none";
           }
         },
