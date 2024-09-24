@@ -94,7 +94,7 @@ function colorModeToggle() {
         },
       }
     );
-    
+
     // Handle .is-glow elements
     gsap.to(".is-glow", {
       opacity: dark ? 1 : 0,
@@ -150,7 +150,6 @@ function colorModeToggle() {
   window.addEventListener("DOMContentLoaded", (event) => {
     const lightButton = document.querySelector(".light-button");
     const darkButton = document.querySelector(".dark-button");
-    const modeToggleBtn = document.querySelector(".mode-toggle-btn"); // New toggle button
 
     let storagePreference = localStorage.getItem("dark-mode");
     if (storagePreference !== null) {
@@ -240,14 +239,6 @@ function colorModeToggle() {
             ease: colorModeEase,
           });
         }
-      });
-    }
-
-    // New mode-toggle-btn functionality
-    if (modeToggleBtn) {
-      modeToggleBtn.addEventListener("click", () => {
-        const isDarkMode = localStorage.getItem("dark-mode") === "true";
-        goDark(!isDarkMode, true);
       });
     }
   });
