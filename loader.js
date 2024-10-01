@@ -2,7 +2,7 @@ let counter = {
   value: 0,
 };
 
-let loadDuration = 5;
+let loadDuration = 6;
 
 // Check if dark mode is enabled
 const isDarkMode = document.documentElement.classList.contains("dark-mode");
