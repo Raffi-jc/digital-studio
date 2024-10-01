@@ -8,7 +8,6 @@ function debounce(func, wait) {
 }
 
 function colorModeToggle() {
-  console.log('testing A');
   function attr(defaultVal, attrVal) {
     const defaultValType = typeof defaultVal;
     if (typeof attrVal !== "string" || attrVal.trim() === "") return defaultVal;
@@ -70,43 +69,55 @@ function colorModeToggle() {
   }
 
   function animateHeroElements(dark) {
-  // Handle setting display before the animation starts
-  if (dark) {
-    document.querySelector(".intro_background_dark").style.display = "block";
+    const introBackgroundDark = document.querySelector(".intro_background_dark");
+    const splashHeroDark = document.querySelector(".splash_hero-dark");
+
+    // Only run the animation if these elements exist on the page
+    if (introBackgroundDark && splashHeroDark) {
+      // Handle setting display before the animation starts
+      if (dark) {
+        introBackgroundDark.style.display = "block";
+      }
+
+      gsap.to(
+        [
+          ".splash_hero-dark",
+          ".hero_dark-mode",
+          ".intro_background_dark",
+          ".splash_hero-light",
+          ".hero_light-mode",
+          ".intro_background_light",
+        ],
+        {
+          opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
+          duration: colorModeDuration,
+          ease: colorModeEase,
+          onComplete: () => {
+            if (!dark) {
+              introBackgroundDark.style.display = "none";
+            }
+          },
+        }
+      );
+
+      // Handle .is-glow elements
+      gsap.to(".is-glow", {
+        opacity: dark ? 1 : 0,
+        duration: colorModeDuration,
+        ease: colorModeEase,
+      });
+    }
   }
 
-  gsap.to(
-    [
-      ".splash_hero-dark",
-      ".hero_dark-mode",
-      ".intro_background_dark",
-      ".splash_hero-light",
-      ".hero_light-mode",
-      ".intro_background_light",
-    ],
-    {
-      opacity: (i) => (dark ? (i < 3 ? 1 : 0) : i < 3 ? 0 : 1),
-      duration: colorModeDuration,
-      ease: colorModeEase,
-      onComplete: () => {
-        if (!dark) {
-          document.querySelector(".intro_background_dark").style.display =
-            "none";
-        }
-      },
-    }
-  );
-
-  // Handle .is-glow elements
-  gsap.to(".is-glow", {
-    opacity: dark ? 1 : 0,
-    duration: colorModeDuration,
-    ease: colorModeEase,
-  });
-}
-
   function goDark(dark, animate) {
-    animateHeroElements(dark);
+    const introBackgroundDark = document.querySelector(".intro_background_dark");
+    const splashHeroDark = document.querySelector(".splash_hero-dark");
+
+    // Only animate hero elements if they exist on the page
+    if (introBackgroundDark && splashHeroDark) {
+      animateHeroElements(dark);
+    }
+
     const loadingAnimation = document.querySelector('.loading_animation');
 
     if (dark) {
@@ -128,7 +139,7 @@ function colorModeToggle() {
 
       // Reset mix-blend-mode to default in light mode
       if (loadingAnimation) {
-        loadingAnimation.style.mixBlendMode = 'screen'; // Adjust if you want a different mode for light mode
+        loadingAnimation.style.mixBlendMode = 'screen';
       }
     }
     window.dispatchEvent(new Event('colorModeToggle'));
