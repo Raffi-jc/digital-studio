@@ -71,8 +71,9 @@ function colorModeToggle() {
     const lightHeroElements = document.querySelectorAll(".splash_hero-light, .intro_background_light");
     const darkHeroElements = document.querySelectorAll(".splash_hero-dark, .intro_background_dark");
 
-    // Animate light and dark elements based on the current mode
+    // Show or hide light/dark elements based on the current mode
     if (dark) {
+      // Fade out light elements and hide them
       gsap.to(lightHeroElements, {
         opacity: 0,
         duration: colorModeDuration,
@@ -81,12 +82,17 @@ function colorModeToggle() {
           lightHeroElements.forEach(el => el.style.display = "none"); // Hide light elements
         },
       });
-      gsap.to(darkHeroElements, {
-        opacity: 1,
-        duration: colorModeDuration,
-        ease: colorModeEase,
-      });
+      // Show dark elements
+      gsap.fromTo(darkHeroElements, 
+        { opacity: 0, display: "block" }, // Ensure dark elements are shown
+        {
+          opacity: 1,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        }
+      );
     } else {
+      // Fade out dark elements and hide them
       gsap.to(darkHeroElements, {
         opacity: 0,
         duration: colorModeDuration,
@@ -95,11 +101,15 @@ function colorModeToggle() {
           darkHeroElements.forEach(el => el.style.display = "none"); // Hide dark elements
         },
       });
-      gsap.to(lightHeroElements, {
-        opacity: 1,
-        duration: colorModeDuration,
-        ease: colorModeEase,
-      });
+      // Show light elements
+      gsap.fromTo(lightHeroElements, 
+        { opacity: 0, display: "block" }, // Ensure light elements are shown
+        {
+          opacity: 1,
+          duration: colorModeDuration,
+          ease: colorModeEase,
+        }
+      );
     }
 
     // Handle .is-glow elements
