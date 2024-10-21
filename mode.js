@@ -68,40 +68,46 @@ function colorModeToggle() {
   }
 
   function animateHeroElements(dark) {
-    const elementsToAnimate = [
-      ".splash_hero-dark",
-      ".hero_dark-mode",
-      ".intro_background_dark",
-      ".splash_hero-light",
-      ".hero_light-mode",
-      ".intro_background_light",
-    ];
+    const lightHeroElements = document.querySelectorAll(".splash_hero-light, .intro_background_light");
+    const darkHeroElements = document.querySelectorAll(".splash_hero-dark, .intro_background_dark");
 
-    // Only run the animation if these elements exist on the page
-    if (elementsToAnimate.some(selector => document.querySelector(selector))) {
-      elementsToAnimate.forEach(selector => {
-        const el = document.querySelector(selector);
-        if (el) {
-          gsap.to(el, {
-            opacity: dark ? (elementsToAnimate.indexOf(selector) < 3 ? 1 : 0) : (elementsToAnimate.indexOf(selector) < 3 ? 0 : 1),
-            duration: colorModeDuration,
-            ease: colorModeEase,
-            onComplete: () => {
-              if (!dark && selector.includes("dark")) {
-                el.style.display = "none";
-              }
-            },
-          });
-        }
+    // Animate light and dark elements based on the current mode
+    if (dark) {
+      gsap.to(lightHeroElements, {
+        opacity: 0,
+        duration: colorModeDuration,
+        ease: colorModeEase,
+        onComplete: () => {
+          lightHeroElements.forEach(el => el.style.display = "none"); // Hide light elements
+        },
       });
-
-      // Handle .is-glow elements
-      gsap.to(".is-glow", {
-        opacity: dark ? 1 : 0,
+      gsap.to(darkHeroElements, {
+        opacity: 1,
+        duration: colorModeDuration,
+        ease: colorModeEase,
+      });
+    } else {
+      gsap.to(darkHeroElements, {
+        opacity: 0,
+        duration: colorModeDuration,
+        ease: colorModeEase,
+        onComplete: () => {
+          darkHeroElements.forEach(el => el.style.display = "none"); // Hide dark elements
+        },
+      });
+      gsap.to(lightHeroElements, {
+        opacity: 1,
         duration: colorModeDuration,
         ease: colorModeEase,
       });
     }
+
+    // Handle .is-glow elements
+    gsap.to(".is-glow", {
+      opacity: dark ? 1 : 0,
+      duration: colorModeDuration,
+      ease: colorModeEase,
+    });
   }
 
   function goDark(dark, animate) {
@@ -113,6 +119,7 @@ function colorModeToggle() {
     if (loadingAnimation) {
       loadingAnimation.style.mixBlendMode = dark ? 'darken' : 'screen';
     }
+    animateHeroElements(dark);
     window.dispatchEvent(new Event('colorModeToggle'));
   }
 
@@ -144,10 +151,10 @@ function colorModeToggle() {
       lightButton.addEventListener("mouseleave", () => {
         if (htmlElement.classList.contains("dark-mode")) {
           setColors(darkColors, true);
-          gsap.to(".splash_hero-light, .intro_background_light", { opacity: 0, duration: colorModeDuration, ease: colorModeEase });
-          gsap.to(".splash_hero-dark, .intro_background_dark", { opacity: 1, duration: colorModeDuration, ease: colorModeEase });
         } else {
           setColors(lightColors, true);
+          gsap.to(".splash_hero-light, .intro_background_light", { opacity: 1, duration: colorModeDuration, ease: colorModeEase });
+          gsap.to(".splash_hero-dark, .intro_background_dark", { opacity: 0, duration: colorModeDuration, ease: colorModeEase });
         }
       });
     }
