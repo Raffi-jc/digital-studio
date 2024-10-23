@@ -44,8 +44,8 @@ function colorModeToggle() {
     let darkValue = computed.getPropertyValue(`--color--${item}`);
     if (lightValue.length) {
       if (!darkValue.length) darkValue = lightValue;
-      lightColors[--color--${item}] = lightValue;
-      darkColors[--color--${item}] = darkValue;
+      lightColors['--color--${item}'] = lightValue;
+      darkColors['--color--${item}'] = darkValue;
     }
   });
 
