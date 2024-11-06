@@ -1085,7 +1085,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: 317f733b
+            name: '-3cbca8bd'
             widget: object
             fields:
               - name: url
