@@ -617,7 +617,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: 5aaf212c
+            name: '-6e5f8564'
             widget: object
             fields:
               - name: url
@@ -630,7 +630,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-3febae6f'
+            name: 5f88b6f5
             widget: object
             fields:
               - name: url
@@ -799,7 +799,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: 7a4bf1ae
+            name: '-267b9fee'
             widget: object
             fields:
               - name: url
@@ -812,7 +812,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '3505195'
+            name: '55086579'
             widget: object
             fields:
               - name: url
@@ -825,7 +825,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-5f145297'
+            name: '-11207da7'
             widget: object
             fields:
               - name: url
@@ -851,7 +851,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: 761e8d8
+            name: 5555bdc8
             widget: object
             fields:
               - name: url
@@ -890,7 +890,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-5bf1b8d8'
+            name: 1fd25a98
             widget: object
             fields:
               - name: url
@@ -916,7 +916,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-2a9ff4ba'
+            name: 5c9cd8b6
             widget: object
             fields:
               - name: url
@@ -929,7 +929,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: 5dec927f
+            name: 795f0a6f
             widget: object
             fields:
               - name: url
@@ -942,7 +942,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-5036d9a4'
+            name: '-59e602a8'
             widget: object
             fields:
               - name: url
@@ -955,7 +955,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-13788a9b'
+            name: 44ba8f49
             widget: object
             fields:
               - name: url
@@ -994,7 +994,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: 4b698915
+            name: 3eaf7479
             widget: object
             fields:
               - name: url
@@ -1085,7 +1085,7 @@ collections:
                 widget: string
                 required: false
           - label: Image
-            name: '-3cbca8bd'
+            name: 317f733b
             widget: object
             fields:
               - name: url
@@ -1111,7 +1111,33 @@ collections:
                 widget: string
                 required: false
           - label: Image
+            name: '-58e41954'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
             name: ff9b9e
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-2f81eb0e'
             widget: object
             fields:
               - name: url
@@ -1137,7 +1163,33 @@ collections:
                 widget: string
                 required: false
           - label: Image
+            name: '-4ec37cf6'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
             name: 2756247b
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-531e6dbb'
             widget: object
             fields:
               - name: url
@@ -1163,7 +1215,33 @@ collections:
                 widget: string
                 required: false
           - label: Image
+            name: 22b2f3d2
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
             name: '-1f3ca3bb'
+            widget: object
+            fields:
+              - name: url
+                label: Image Url
+                widget: image
+                allow_multiple: false
+                required: false
+              - name: alt
+                label: Image Alt
+                widget: string
+                required: false
+          - label: Image
+            name: '-5f787c5'
             widget: object
             fields:
               - name: url
