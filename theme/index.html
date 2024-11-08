@@ -25,7 +25,9 @@
   <link href="{{ settings.site.favicon | default: "/assets/images/favicon.png" }}" rel="shortcut icon" type="image/x-icon">
   <link href="{{ settings.site.apple_touch_icon | default: "/assets/images/webclip.png" }}" rel="apple-touch-icon">
   <link rel="preconnect" href="https://assets.website-files.com">
-  <link rel="preload" href="https://cdn.jsdelivr.net/gh/Raffi-jc/digital-studio@latest/min-toggle.js" as="script">
+  <link rel="preload" href="https://cdn.jsdelivr.net/gh/Raffi-jc/digital-studio@latest/mode-min.js" as="script">
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link rel="preconnect" href="https://www.google.com">
   <style>
 body .transition {display: block}
 .w-editor .transition {display: none;}
@@ -937,7 +939,7 @@ margin: 0rem !important;
             </div>
             <div id="projects_wrapper" data-w-id="4e1efa04-68fb-9e33-da10-621425dd3359" class="projects_wrapper">
               <div class="swiper-decor swiper-grass"><img src="{{ images.2e3b1f63.url }}" loading="lazy" sizes="(max-width: 479px) 100vw, (max-width: 991px) 70vw, 50vw" alt="{{ images.2e3b1f63.alt | escape }}" class="project_grass">
-                <div class="project_grass-reflection_wrapper"><img src="{{ images.-56c0a826.url }}" loading="lazy" sizes="(max-width: 479px) 100vw, (max-width: 991px) 70vw, (max-width: 4778px) 50vw, 2389px" alt="{{ images.-56c0a826.alt | escape }}"><svg xmlns="http://www.w3.org/2000/svg" width="100%" class="svg-filter">
+                <div class="project_grass-reflection_wrapper"><img src="{{ images.-56c0a826.url }}" loading="lazy" sizes="100vw" alt="{{ images.-56c0a826.alt | escape }}"><svg xmlns="http://www.w3.org/2000/svg" width="100%" class="svg-filter">
                     <filter id="grass-reflection">
                       <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="3" seed="10" stitchTiles="noStitch" result="feTurbulence-8d1a26e5"></feTurbulence>
                       <feDisplacementMap in="SourceGraphic" in2="feTurbulence-8d1a26e5" scale="10" xChannelSelector="A" yChannelSelector="A"></feDisplacementMap>

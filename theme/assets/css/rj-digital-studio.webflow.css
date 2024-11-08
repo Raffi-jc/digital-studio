@@ -1665,7 +1665,7 @@ img {
 
 .splash_hero-light {
   opacity: 1;
-  background-image: var(--image-54fea5ef);
+  background-image: var(--image-55086579);
   background-position: 0 0;
   background-size: cover;
   width: 100vw;
@@ -1677,7 +1677,7 @@ img {
 
 .splash_hero-dark {
   opacity: 0;
-  background-image: var(--image-79554ae5);
+  background-image: var(--image-795f0a6f);
   background-position: 0 0;
   background-size: cover;
   width: 100vw;
